@@ -15,21 +15,28 @@ def bot_login():
     return login
 
 # bot checks for a simple string in a comment from a subreddit
-def run_bot(login, comments_replied_to):
+def run_bot(login, comments_replied_to, jojo_reference_counter):
+    
     print("Obtaining 25 comments...")
 
-    for comment in login.subreddit('test').comments(limit=25):
-        if ("dogboi" in comment.body) and (comment.id not in comments_replied_to): #and (comment.author != login.user.me()):
-            print("test dogboi found! id=" + comment.id)
-            # replies to comment
-            #comment.reply("test dogboi successful!")
-            print("Replied to comment id=" + comment.id)
+    for comment in login.subreddit('ShitPostCrusaders+QualityPostCrusaders').comments(limit=25):
+        if redditor('HeMan_Batman') and comment.id not in comments_replied_to:
+            print("HeMan_Batman found JoJo referencing!")
+
+            # reply to comment, add to jojo_reference_counter
+            comment.reply("[Is that a JoJo reference?!](https://i.kym-cdn.com/photos/images/original/001/217/374/8fa.png) \n ^reference counter: {}").format(jojo_reference_counter)
+            jojo_reference_counter += 1
 
             comments_replied_to.append(comment.id)
-            # writes comment id replied to, to file
+
+            # writes comment id to file
             with open("comments_replied_to.txt", "a") as f:
                 print("Writing id to file...")
-                f.write(comment.id + "\n")
+                f.write(comment.id + "\n")            
+
+    return jojo_reference_counter
+
+
 
     print("Sleeping for 10 seconds...")
     time.sleep(10)
@@ -51,5 +58,8 @@ login = bot_login()
 comments_replied_to = get_saved_comments()
 print(comments_replied_to)
 
+jojo_reference_counter = 0
+print(jojo_reference_counter)
+
 while True:
-    run_bot(login, comments_replied_to)
+    run_bot(login, comments_replied_to, jojo_reference_counter)
